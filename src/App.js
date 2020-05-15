@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
 import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import { connect } from 'react-redux'
+import {me} from './Redux/userActionCreators'
+import Menu from './components/Menu/Menu'
+import Pages from './pages'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css"
+import LoadindScreen from './components/LoadingScreen/LoadindScreen';
+
+const App = ({loading, meUser})=>{ 
+    
+  useEffect ( () => meUser(), [])
+
+// switch в отд комп
+    return (         
+        <BrowserRouter>
+        <div className="App">   
+          <Menu />
+          <LoadindScreen isLoad={loading}/>  
+          <Pages />           
+        </div>
+        </BrowserRouter>
+    );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  loading: state.user.loading
+});
+
+const mapDispatchTpProps = (dispatch) => ({
+  meUser: () => dispatch(me())
+});
+
+
+export default connect(mapStateToProps,mapDispatchTpProps)(App);
