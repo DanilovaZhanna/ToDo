@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Electrolize&display=swap');
+
+.back {
+    /* background: url(../../img/background.jpg);
+    background-repeat:no-repeat;
+    background-size: cover; */
+    /* width: 100vw;
+    height: 93vh; */
+}
+
+.auth {
+    position:absolute;
+    margin: 0 auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    min-width: 400px;
+    min-height: 330px;
+    background-color: white;
+    border: 3px solid #6495ED;
+    border-radius: 25px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    padding: 15px;
+    opacity: 90%;
+    font-family: 'Electrolize', sans-serif;
+}
+
+.flex-form {
+    min-height: 200px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+}
+
+.flex-form input {
+    margin-bottom: 10px;
+}
+
+
+
+
