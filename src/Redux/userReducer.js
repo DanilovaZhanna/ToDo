@@ -1,11 +1,13 @@
-import {LOGIN, LOGOUT, BAD_QUERY, LOADING_USER} from '../Redux/constants';
+import {LOGIN, LOGOUT, BAD_QUERY, GOT_ME, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER} from '../Redux/constants';
 
 const initUser = {
     name: '',
     role: '',
     login: false, 
     error: '',
-    loading: false
+    loading: false,
+    me: false,
+    users: []
 };
 
 
@@ -18,11 +20,24 @@ const userReducer = (state=initUser, action) => {
             login:true
         }
         case LOGOUT: return {
-            ...initUser
+            ...initUser,
+            me: true
         }
-        case LOADING_USER: return {
+        case TURN_ON_LOADING_USER: return {
             ...state,
-            loading: !state.loading
+            loading: true
+        }
+        case LOAD_USERS: return {
+            ...state,
+            users: action.users
+        }
+        case GOT_ME: return {
+            ...state,
+            me: true
+        }
+        case TURN_OFF_LOADING_USER: return {
+            ...state,
+            loading: false
         }
         default: 
             return state;

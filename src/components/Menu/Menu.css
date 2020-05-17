@@ -1,20 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=Electrolize&display=swap');
-
 .menu {
-    overflow: hidden;
     display: flex;
     width: 20vw;
     height: 100vh;
+    min-width: 300px;
     flex-flow: column nowrap;
     align-items: flex-start;
     background: #E5E5E5;
-    padding: 20px;
+    padding: 20px;   
 }
 
 .navlink {
     margin-top: 20px;
-    font-size: 20pt;
-    font-family: 'Electrolize', sans-serif;
+    font-size: 24pt;
     text-decoration: none;
     color: black;    
 }

@@ -1,14 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Electrolize&display=swap');
-
-.back {
-    /* background: url(../../img/background.jpg);
-    background-repeat:no-repeat;
-    background-size: cover; */
-    /* width: 100vw;
-    height: 93vh; */
-}
-
-.auth {
+.authPage {
     position:absolute;
     margin: 0 auto;
     left: 50%;
@@ -16,8 +6,8 @@
     transform: translate(-50%,-50%);
     min-width: 400px;
     min-height: 330px;
-    background-color: white;
-    border: 3px solid #6495ED;
+    background-color: rgb(255, 255, 255);
+    border: 3px solid rgb(211, 215, 219);
     border-radius: 25px;
     display: flex;
     flex-flow: column nowrap;

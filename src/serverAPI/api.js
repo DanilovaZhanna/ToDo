@@ -20,7 +20,7 @@ export const logoutPOST = () => {
     return axios.post(baseURL+"/logout")
 }
 
-export const getUsers = () => {
+export const usersGET = () => {
     return axios.get(baseURL+"/users")
 }
 
@@ -32,10 +32,10 @@ export const addTodo = (data) => {
     return axios.post(baseURL+"/todos", data)
 }
 
-export const changeTodo = (id, data) => {
-    return axios.put(baseURL+`${id}`, data)
+export const editTodo = (id, data) => {
+    return axios.put(baseURL+`/todos/${id}`, data)
 } 
 
 export const delTodo = (id) => {
-    return axios.delete(baseURL+`${id}`)
+    return axios.delete(baseURL+`/todos/${id}`)
 }

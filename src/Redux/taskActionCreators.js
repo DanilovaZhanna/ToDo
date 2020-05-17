@@ -1,5 +1,6 @@
-import { UPLOAD_TODO, LOADING_TODO, ADD_TODO, DEL_TODO, CHANGE_TODO } from './constants'
-import { getTodos, addTodo, delTodo, changeTodo } from '../serverAPI/api';
+import { UPLOAD_TODO, ADD_TODO, TURN_OFF_LOADING_TODO, TURN_ON_LOADING_TODO, 
+            DEL_TODO, CHANGE_TODO, OPEN_MODAL, CLOSE_MODAL } from './constants'
+import { getTodos, addTodo, delTodo, editTodo } from '../serverAPI/api';
 
 export const uploadAct = (todos) => {
     return {
@@ -8,27 +9,22 @@ export const uploadAct = (todos) => {
     }
 } 
 
-const changeLoad = () => {
-    return {
-        type: LOADING_TODO
-    }
-}
-
-const change = (id, name, status) => {
+const change = (id, title, description) => {
     return {
         type: CHANGE_TODO,
         id,
-        name,
-        status
+        title,
+        description
     }
 }
 
-const addAct = (id, name, status) => {
+const addAct = (id, title, description, createdBy) => {
     return {
         type: ADD_TODO,
         id,
-        name,
-        status
+        title,
+        createdBy,
+        description
     }
 }
 
@@ -39,34 +35,61 @@ const delAct = (id) => {
     }
 }
 
-export const put = (id, name, status) => {
-    return dispatch => {        
-        changeTodo(id, name, status) 
-        .then((res) => { console.log(res);
-           dispatch(change(id, name, status))
-        })  
-        .catch(err => {
-            dispatch(changeLoad)
-        })
+export const offLoad = () => {
+    return {
+        type: TURN_OFF_LOADING_TODO
     }
 }
 
-export const add = (name, status) => {
+const onLoad = () => {
+    return {
+        type: TURN_ON_LOADING_TODO
+    }
+}
+
+export const openModal = () => {
+    return {
+        type: OPEN_MODAL
+    }
+}
+
+const closeModal = () => {
+    return {
+        type: CLOSE_MODAL
+    }
+}
+
+export const edit = (id, title, description) => {
     return dispatch => {        
-        addTodo(name, status)      
-        .then((response) => {
-           console.log(response.data)
-           const { id, name, status } = response.data
-           dispatch(addAct(id, name, status))
+        dispatch(onLoad())
+        editTodo(id, {title, description}) 
+        .then(() => {             
+           dispatch(change(id, title, description))
+           dispatch(closeModal())
         })  
-        .catch(err => {
-            dispatch(changeLoad)
+        .finally(() => 
+        dispatch(offLoad()))
+    }
+}
+
+export const add = (title, description) => {
+    return dispatch => {     
+        dispatch(onLoad())   
+        addTodo({title, description})      
+        .then((response) => {
+           const { id, title, description, createdBy } = response.data
+           dispatch(addAct(id, title, description, createdBy))
+           dispatch(closeModal())
+        })  
+        .finally(() => {
+            dispatch(offLoad())
         })
     }
 }
 
 export const deleteTask = (id) => {
     return dispatch => {
+        dispatch(onLoad())
         delTodo(id)
         .then(() => { 
             dispatch(delAct(id))
@@ -74,18 +97,21 @@ export const deleteTask = (id) => {
         .catch(err => {
             console.log(err)
         })
+        .finally(() => {
+            dispatch(offLoad())
+        })
     }
 }
 
 export const upload = () => {
     return dispatch => {        
-        dispatch(changeLoad)
+        dispatch(onLoad())
         getTodos()        
         .then((response) => {
            dispatch(uploadAct(response.data))
         })  
-        .catch(err => {
-            dispatch(changeLoad)
+        .finally(() => {
+            dispatch(offLoad())
         })
     }
 }

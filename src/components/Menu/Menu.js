@@ -7,12 +7,12 @@ import './Menu.css'
 
 const style = {color: "#CC22E2"};
 
-// ИСПРАВИТь меню не показывать пока не авторизован
+
 const Menu = ({auth, name, role, Logout}) => {    
     return (
         auth ? 
         (<nav className="menu">
-            {auth ? (<h3>Welcome, {name}!</h3>) : null}
+            {auth ? (<h1>Welcome, {name}!</h1>) : null}
             <NavLink className='navlink' activeStyle={style} to='/todos'>To do list</NavLink>
 
             {role === 'admin' ? (

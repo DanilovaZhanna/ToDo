@@ -4,28 +4,32 @@
     width: 730px;
   }
 
-  .list-group-item:hover {
+   .list-group-item:hover {
     background-color: #EFEBEB;
-  }
+  } 
 
 .fAdd {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
+  align-items: center;
   font-size: 30px;
 }
 
-  .wMain {
-    height: 600px;
-    width: 750px;
-    background: #F1F1F1;
-    display: flex;
-    align-items: center;
-    flex-flow: column nowrap;
-    overflow: auto;
-  }
-  h3 {
-    display: block;    
-    margin: 0 auto;
-    font-family: 'Annie Use Your Telescope', cursive;
-  }
+.btnPlus {
+  height: 35px;
+}
+
+.wMain {
+  height: 600px;
+  width: 750px;
+  background: #F1F1F1;
+  display: flex;
+  align-items: center;
+  flex-flow: column nowrap;
+  overflow: auto;
+}
+h3 {
+  display: block;    
+  margin: 0 auto;
+}

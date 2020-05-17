@@ -37,3 +37,10 @@
   .btn-inf:hover {
     background-color: #9FC9C9;
   }
+
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Arial, Helvetica, sans-serif;
+  }

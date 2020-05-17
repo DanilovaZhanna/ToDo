@@ -5,16 +5,6 @@
     margin-top: 35px;
     justify-content: center;
     align-items: center;    
-    /* margin-bottom: -35px; */
-    /* координаты положения */
-    /* left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0; */
-    /* фоновый цвет элемента */
-    /* background: #e0e0e0; */
-    /* background: url("../../img/background.jpg");
-    background-size:cover; */
     z-index: 1001;
   }
   
@@ -34,7 +24,7 @@
     position: absolute;
     display: inline-block;
     top: 0;
-    background-color: #c6d7ff;
+    background-color: rgb(183, 186, 197);
     border-radius: 100%;
     width: 35px;
     height: 35px;
