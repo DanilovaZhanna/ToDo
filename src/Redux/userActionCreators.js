@@ -1,5 +1,6 @@
-import {LOGIN, LOGOUT, BAD_QUERY, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER, GOT_ME } from './constants';
+import {LOGIN, LOGOUT, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER, GOT_ME } from './constants';
 import {loginPOST, logoutPOST, meGET, usersGET} from '../serverAPI/api';
+import { errorHandler, ErrorCount, throwError } from './appActionCreator'
 
 const login_set=(name, role)=> { 
     return {
@@ -9,18 +10,11 @@ const login_set=(name, role)=> {
     }
 }
 
-const logout_set = () => {
+export const logoutSet = () => {
     return {
         type: LOGOUT
     }
 }
-
-const alert_error = (message) => {
-    return {
-        type: BAD_QUERY,
-        message
-    }
-} 
 
 const getUsers = (users) => {
     return {
@@ -47,51 +41,50 @@ export const offLoad = () => {
     }
 }
 
+const errorLogout = new ErrorCount();
 export const logout = () => {
     return dispatch => {
-        dispatch(alert_error(null))
         dispatch(onLoad());
         logoutPOST()
         .then(() => {
-           dispatch(logout_set()) 
+           dispatch(logoutSet()) 
+           success(dispatch, errorLogout)
         })  
-        .catch(err => {
-            dispatch(alert_error(err.response.data.message));
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(logout()), count:errorLogout}));
         })
-       .finally(() => dispatch(offLoad()))
     }
 }
 
+const errorLoad = new ErrorCount();
 export const loadUsers = () => {
     return dispatch => {
         dispatch(onLoad())
         usersGET()
         .then((res) => {
             dispatch((getUsers(res.data)))
+            success(dispatch, errorLoad)
         })
-        .finally(() => dispatch(offLoad()))
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(loadUsers()), count:errorLoad}));
+        })
     }
 }
 
+const errorLogin = new ErrorCount();
 export const login = (name, password) => {
     return dispatch => {
-        dispatch(alert_error(null)) 
         dispatch(onLoad())
         loginPOST(name, password)
         .then(response => { 
            const {name, role} = response.data;
            dispatch(login_set(name, role)) 
+           success(dispatch, errorLogin)
         })  
-        .catch(err => {
-            dispatch(alert_error(err.response.data.message));
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(login(name, password)), count:errorLogin}));
         })
-        .finally(()=>{
-            dispatch(setMe())
-            dispatch(offLoad());
-        });
     }
 }
 
+const errorMe = new ErrorCount();
 export const me = () => {
     return dispatch => {
         dispatch(onLoad());
@@ -99,16 +92,16 @@ export const me = () => {
         .then(response => { 
             const {name, role} = response.data;
             dispatch(login_set(name, role));
+            dispatch(setMe());
+            success(dispatch, errorMe)
         })  
-        .catch(err => { console.log(err);
+        .catch(err => { dispatch(errorHandler(err, {hider:offLoad, method: ()=> dispatch(me()), count:errorMe}));
         })
-        .finally(()=>{
-            dispatch(setMe())
-            dispatch(offLoad())
-        });
     }
 }
 
-function errorHandler(error) {
-    // 
+const success = (dispatch, errorCount) => {    
+    dispatch(offLoad());    
+    dispatch(throwError(null))
+    errorCount.reset();
 }

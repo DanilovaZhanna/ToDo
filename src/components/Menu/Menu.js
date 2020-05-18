@@ -20,7 +20,7 @@ const Menu = ({auth, name, role, Logout}) => {
             ) : null }
 
             {auth ? (
-                <NavLink className='navlink' activeStyle={style} onClick={Logout} to='/login'>Logout</NavLink>
+                <NavLink className='navlink' activeStyle={style} onClick={Logout} to='/logout'>Logout</NavLink>
             ) : null }
             
             {!auth ? (

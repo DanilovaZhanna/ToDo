@@ -1,6 +1,5 @@
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
-export const BAD_QUERY = 'BAD_QUERY'
 export const LOADING_USER = 'LOADING_USER'
 export const TURN_OFF_LOADING_USER = 'TURN_OFF_LOADING_USER'
 export const TURN_ON_LOADING_USER = 'TURN_ON_LOADING_USER'
@@ -16,3 +15,4 @@ export const TURN_ON_LOADING_TODO = 'TURN_ON_LOADING_TODO'
 export const OPEN_MODAL = `OPEN_MODAL`
 export const CLOSE_MODAL = `CLOSE_MODAL`
 
+export const ERROR = 'ERROR';

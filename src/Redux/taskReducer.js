@@ -3,7 +3,6 @@ import {ADD_TODO, UPLOAD_TODO, TURN_OFF_LOADING_TODO, TURN_ON_LOADING_TODO,
 
 const initState = {
     todos: [],
-    error: '',
     loading: false,
     canClose: false
 }
@@ -12,7 +11,6 @@ const taskReducer = (state=initState, action) => {
     switch (action.type) { 
         case ADD_TODO: {
             const {id, title, description, createdBy} = action;
-            console.log(action)
             return {
                 ...state,
                 todos: [...state.todos, {id, title, description, createdBy}]

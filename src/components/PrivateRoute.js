@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -7,15 +7,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        rest.isAuth ? (
+        (rest.role === 'admin') ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location },
-            }}
-          />
+          <h1>Недостаточно прав</h1>
         )
       }
     />
@@ -24,7 +19,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
 const mapStateToProps = state => {
   return {
-    isAuth: state.user.login
+    role: state.user.role
   }
 }
 

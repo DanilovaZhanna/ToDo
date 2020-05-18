@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 
 import "./Modal.css"
 import LoadingScreen from '../LoadingScreen/LoadindScreen';
+import { getTodo } from '../../Redux/selectors';
 
 const modalRoot = document.getElementById('modal-root');
 // туда будет рендериться портал
@@ -20,14 +21,14 @@ class Modal extends React.Component {
         modalRoot.appendChild(this.state.root)
         // если изменяем имеющийся то записываем в поля title descr
         if (!this.props.isAdd) {
-            const { title, description } = this.props.todos.find((el) => (el.id === this.props.id)) 
+            const { title, description } = this.props.todo(this.props.id)
             this.setState({title, description})
             }
     }
 
     componentDidUpdate() {
         if (this.props.canClose) { 
-            this.props.onClose()                
+            this.props.onClose()    
             this.props.openModal()      
         }  
     }
@@ -83,7 +84,7 @@ class Modal extends React.Component {
             />  
                       
             <div className="msg">
-            {this.props.errorMessage ? <div style={{color:"red"}}>{this.props.errorMessage}</div>: null }
+            {this.props.errorMessage ? <div className="errorM">{this.props.errorMessage}</div>: null }
             </div>
             <div className='btns'>  
                 <button type="submit" className="btn btn-add">{isAdd ? `ADD` : `CHANGE`}</button>
@@ -99,9 +100,10 @@ class Modal extends React.Component {
 
 
 const mapStateToProps = (state) => ({
-    todos: state.task.todos,
+    todo: (id) => getTodo(id)(state),
     loading: state.task.loading,
-    canClose: state.task.canClose
+    canClose: state.task.canClose,
+    errorMessage: state.app.error
 });
 
 const mapDispatchTpProps = (dispatch) => ({

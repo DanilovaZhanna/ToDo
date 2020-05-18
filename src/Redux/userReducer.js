@@ -1,4 +1,4 @@
-import {LOGIN, LOGOUT, BAD_QUERY, GOT_ME, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER} from '../Redux/constants';
+import {LOGIN, LOGOUT, GOT_ME, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER} from '../Redux/constants';
 
 const initUser = {
     name: '',

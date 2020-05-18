@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {login} from '../../Redux/userActionCreators'
 import LoadindScreen from '../LoadingScreen/LoadindScreen'
 import './Login.css'
-import { Redirect } from 'react-router-dom'
+import { getErrors } from '../../Redux/selectors'
 
 
 class Login extends React.Component {
@@ -15,6 +15,7 @@ class Login extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
     const { username, password } = this.state
+    console.log(username + ' ' + password)
     this.props.userLogin(username, password)
   }
 
@@ -30,10 +31,9 @@ class Login extends React.Component {
   
   render() {    
 
-    if (this.props.loading) {
+    if (this.props.loading) { 
       return <LoadindScreen isLoad={true}/>
     }
-
     const { username, password } = this.state
   
     return (
@@ -60,9 +60,8 @@ class Login extends React.Component {
               placeholder={'Password'}
               value={password}
             />  
-                      
+                     
             <div className="msg">
-              {this.props.loading ? <div>loading...</div> : null}
               {this.props.errorMessage ? <div style={{color:"red"}}>{this.props.errorMessage}</div> : null }
             </div>
             <hr className="my-4"></hr>
@@ -76,8 +75,7 @@ class Login extends React.Component {
 
 
 const mapStateToProps = (state) => ({
-  auth: state.user.login,
-  errorMessage: state.user.errors,
+  errorMessage: getErrors(state),
   loading: state.user.loading
 });
 

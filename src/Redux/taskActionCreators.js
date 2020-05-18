@@ -1,6 +1,7 @@
 import { UPLOAD_TODO, ADD_TODO, TURN_OFF_LOADING_TODO, TURN_ON_LOADING_TODO, 
             DEL_TODO, CHANGE_TODO, OPEN_MODAL, CLOSE_MODAL } from './constants'
 import { getTodos, addTodo, delTodo, editTodo } from '../serverAPI/api';
+import { errorHandler, ErrorCount, throwError } from './appActionCreator'
 
 export const uploadAct = (todos) => {
     return {
@@ -59,6 +60,7 @@ const closeModal = () => {
     }
 }
 
+const errorEdit = new ErrorCount()
 export const edit = (id, title, description) => {
     return dispatch => {        
         dispatch(onLoad())
@@ -66,12 +68,14 @@ export const edit = (id, title, description) => {
         .then(() => {             
            dispatch(change(id, title, description))
            dispatch(closeModal())
+           success(dispatch, errorEdit)
         })  
-        .finally(() => 
-        dispatch(offLoad()))
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(edit(id, title, description)), count:errorEdit}));
+        })
     }
 }
 
+const errorAdd = new ErrorCount()
 export const add = (title, description) => {
     return dispatch => {     
         dispatch(onLoad())   
@@ -80,38 +84,43 @@ export const add = (title, description) => {
            const { id, title, description, createdBy } = response.data
            dispatch(addAct(id, title, description, createdBy))
            dispatch(closeModal())
+           success(dispatch, errorAdd)
         })  
-        .finally(() => {
-            dispatch(offLoad())
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(add(title, description)), count:errorAdd}));
         })
     }
 }
 
+const errorDelete = new ErrorCount()
 export const deleteTask = (id) => {
     return dispatch => {
         dispatch(onLoad())
         delTodo(id)
         .then(() => { 
             dispatch(delAct(id))
+            success(dispatch, errorDelete)
         })
-        .catch(err => {
-            console.log(err)
-        })
-        .finally(() => {
-            dispatch(offLoad())
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(deleteTask(id)), count:errorDelete}));
         })
     }
 }
 
+const errorUpload = new ErrorCount()
 export const upload = () => {
     return dispatch => {        
         dispatch(onLoad())
         getTodos()        
         .then((response) => {
            dispatch(uploadAct(response.data))
+           success(dispatch, errorUpload)
         })  
-        .finally(() => {
-            dispatch(offLoad())
+        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(upload()), count:errorUpload}));
         })
     }
+}
+
+const success = (dispatch, errorCount) => {    
+    dispatch(offLoad());    
+    dispatch(throwError(null))
+    errorCount.reset();
 }

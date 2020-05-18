@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
-import './App.css';
-import './fonts/style.css'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import LoadingScreen from './components/LoadingScreen/LoadindScreen';
 import { connect } from 'react-redux'
 import {me} from './Redux/userActionCreators'
 import Menu from './components/Menu/Menu'
 import Login from './components/Login/Login.js'
 import Pages from './pages'
 
+import './fonts/style.css'
 import "./App.css"
-import LoadingScreen from './components/LoadingScreen/LoadindScreen';
 
 const App = ({ meUser, me, isAuth, loading })=>{ 
     
   useEffect ( () => meUser(), [meUser])
+  
 
     return (         
         <BrowserRouter>

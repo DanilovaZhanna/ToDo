@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import './Todo-item.css'
 
 const mainRole = 'admin'
-const TodoItem = ({ todo, delTask, onChange, role, name }) => {
+const TodoItem = ({ todo, delTask, onChange, role }) => {
     return (
     <span className='item'> 
         <div>
@@ -28,8 +28,7 @@ const TodoItem = ({ todo, delTask, onChange, role, name }) => {
 
 function mapStateToProps(state) {
     return {        
-        role: state.user.role,
-        name: state.user.name
+        role: state.user.role
     }
 } 
  export default connect(mapStateToProps, null)(TodoItem)

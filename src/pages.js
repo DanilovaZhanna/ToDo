@@ -4,16 +4,18 @@ import Todolist  from './components/TodoList/Todolist';
 import { connect } from 'react-redux'
 import Users from './components/Users/Users'
 import LoadindScreen from './components/LoadingScreen/LoadindScreen';
+import PrivateRoute from './components/PrivateRoute';
 
-// rкуда впихнуть эту мразь 
+
 const Pages = ({ loading}) => {
     return (
     <div className='pages'>        
         <LoadindScreen isLoad={loading}/>  
         <Switch>           
-            <Route exact path="/" />
+            <Route exact path="/"><h1>This is homepage</h1></Route>
             <Route path="/todos" component={Todolist} /> 
-            <Route path="/users" component={Users} />           
+            <PrivateRoute path="/users" component={Users} />   
+            <Route path="/logout"  />             
             <Redirect to="/"/>
         </Switch>
     </div>    
