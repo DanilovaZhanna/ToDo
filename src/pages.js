@@ -6,11 +6,10 @@ import Users from './components/Users/Users'
 import LoadindScreen from './components/LoadingScreen/LoadindScreen';
 import PrivateRoute from './components/PrivateRoute';
 
-
 const Pages = ({ loading}) => {
     return (
     <div className='pages'>        
-        <LoadindScreen isLoad={loading}/>  
+        <LoadindScreen isLoad={loading}/>        
         <Switch>           
             <Route exact path="/"><h1>This is homepage</h1></Route>
             <Route path="/todos" component={Todolist} /> 

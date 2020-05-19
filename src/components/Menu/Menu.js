@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 import {logout} from '../../Redux/userActionCreators'
 
 import './Menu.css'
+import { getAuth } from '../../Redux/selectors'
 
 const style = {color: "#CC22E2"};
 
@@ -31,7 +32,7 @@ const Menu = ({auth, name, role, Logout}) => {
 }
 
 const mapStateToProps = (state) => ({
-    auth: state.user.login,
+    auth: getAuth(state),
     name: state.user.name,
     role: state.user.role
 });

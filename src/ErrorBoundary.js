@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getErrors } from './Redux/selectors';
 
 class ErrorBoundary extends React.Component {
-
+    // как отлавливать ошибки с сервера? на случай 500 ошибки я записываю в редакс "500" и тут сравниваю строку 
     constructor(props) {
         super(props);
         this.state = { hasError: false };
@@ -19,7 +20,6 @@ class ErrorBoundary extends React.Component {
     
       render() {
         if (this.state.hasError || this.props.error === '500') {
-          // You can render any custom fallback UI
           return <h1>
               Ошибка{this.props.error === '500' && ' 500'}. Пожалуйста, обновите страницу
               {this.state.hasError.message}
@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    error: state.app.error
+    error: getErrors(state)
 })
 
 export default connect(mapStateToProps, null)(ErrorBoundary)

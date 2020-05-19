@@ -14,11 +14,12 @@ const App = ({ meUser, me, isAuth, loading })=>{
     
   useEffect ( () => meUser(), [meUser])
   
-
+  // me - это выполнился ли /me или нет, если нет пока загрузка, если выполнился, то в зависимости 
+  // от авторизован или нет показывается либо логин либо менюшка с тудушками
     return (         
         <BrowserRouter>
           <div className="App">   
-            <Menu /> 
+            <Menu />             
             { me ? (isAuth ? <Pages /> : (   
                 <Switch>                       
                   <Route path='/login' component={Login} />   

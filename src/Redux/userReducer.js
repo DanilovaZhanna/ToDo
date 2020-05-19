@@ -1,5 +1,6 @@
 import {LOGIN, LOGOUT, GOT_ME, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER} from '../Redux/constants';
 
+// login - авторизован ли пользователь или нет, me - получен ли ответ с /me или нет
 const initUser = {
     name: '',
     role: '',
@@ -23,10 +24,6 @@ const userReducer = (state=initUser, action) => {
             ...initUser,
             me: true
         }
-        case TURN_ON_LOADING_USER: return {
-            ...state,
-            loading: true
-        }
         case LOAD_USERS: return {
             ...state,
             users: action.users
@@ -34,6 +31,10 @@ const userReducer = (state=initUser, action) => {
         case GOT_ME: return {
             ...state,
             me: true
+        }
+        case TURN_ON_LOADING_USER: return {
+            ...state,
+            loading: true
         }
         case TURN_OFF_LOADING_USER: return {
             ...state,

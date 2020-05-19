@@ -2,7 +2,8 @@ import {LOGIN, LOGOUT, LOAD_USERS, TURN_ON_LOADING_USER, TURN_OFF_LOADING_USER, 
 import {loginPOST, logoutPOST, meGET, usersGET} from '../serverAPI/api';
 import { errorHandler, ErrorCount, throwError } from './appActionCreator'
 
-const login_set=(name, role)=> { 
+// запиcать в редакс имя и роль
+const loginSet=(name, role)=> { 
     return {
         type: LOGIN,
         name,
@@ -16,6 +17,7 @@ export const logoutSet = () => {
     }
 }
 
+// получить список всех юзеров
 const getUsers = (users) => {
     return {
         type: LOAD_USERS,
@@ -76,7 +78,7 @@ export const login = (name, password) => {
         loginPOST(name, password)
         .then(response => { 
            const {name, role} = response.data;
-           dispatch(login_set(name, role)) 
+           dispatch(loginSet(name, role)) 
            success(dispatch, errorLogin)
         })  
         .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(login(name, password)), count:errorLogin}));
@@ -84,6 +86,8 @@ export const login = (name, password) => {
     }
 }
 
+// отправляем me, если все ок или 401 то ставим в редаксе me в true, что ответ получен
+// если он авторизован записываем имя и роль
 const errorMe = new ErrorCount();
 export const me = () => {
     return dispatch => {
@@ -91,7 +95,7 @@ export const me = () => {
         meGET()
         .then(response => { 
             const {name, role} = response.data;
-            dispatch(login_set(name, role));
+            dispatch(loginSet(name, role));
             dispatch(setMe());
             success(dispatch, errorMe)
         })  
@@ -100,6 +104,7 @@ export const me = () => {
     }
 }
 
+// если все успешно то в санке loading ставим в false, ошибки стираем, обнуляем счетчик обратно
 const success = (dispatch, errorCount) => {    
     dispatch(offLoad());    
     dispatch(throwError(null))

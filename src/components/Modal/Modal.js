@@ -3,13 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { add, edit, openModal } from '../../Redux/taskActionCreators'
 import ReactDOM from 'react-dom'
-
 import "./Modal.css"
 import LoadingScreen from '../LoadingScreen/LoadindScreen';
-import { getTodo } from '../../Redux/selectors';
+import { getTodo, getErrors } from '../../Redux/selectors';
 
-const modalRoot = document.getElementById('modal-root');
+// модальное окно с помощью портала
 // туда будет рендериться портал
+const modalRoot = document.getElementById('modal-root');
+
 class Modal extends React.Component {
   state = {
     title: '',
@@ -17,25 +18,28 @@ class Modal extends React.Component {
     root: document.createElement('div')
   }
 
-    componentDidMount() {      
-        modalRoot.appendChild(this.state.root)
-        // если изменяем имеющийся то записываем в поля title descr
-        if (!this.props.isAdd) {
-            const { title, description } = this.props.todo(this.props.id)
-            this.setState({title, description})
-            }
-    }
+  componentDidMount() {      
+    modalRoot.appendChild(this.state.root)
+    // если изменяем имеющийся то записываем в поля title descr
+    if (!this.props.isAdd) {
+      const { title, description } = this.props.todo(this.props.id)
+      this.setState({title, description})
+      }
+  }
 
-    componentDidUpdate() {
-        if (this.props.canClose) { 
-            this.props.onClose()    
-            this.props.openModal()      
-        }  
-    }
+  componentDidUpdate() {
+    // если можно закрыть окно (значит успешно прошло добавление или изменение)
+    // то вызываем openModal, чтобы canClose обратно в false, чтобы оно открылось в следующий раз
+    // и вызываем onCLose чтобы закрыть модалку
+    if (this.props.canClose) { 
+      this.props.onClose()    
+      this.props.openModal()      
+    }  
+  }
 
-    componentWillUnmount() { 
-        modalRoot.removeChild(this.state.root);  
-    }
+  componentWillUnmount() { 
+    modalRoot.removeChild(this.state.root);  
+  }
 
   handleSubmit = e => {
     e.preventDefault()
@@ -62,35 +66,34 @@ class Modal extends React.Component {
       <div className="modal-wrapper">          
         <div className='auth'> 
             {!loading ? (<>{isAdd ? (<h5>ADD TASK</h5>) : (<h5>CHANGE TASK</h5>)}
-          <form className="flex-form" onSubmit={this.handleSubmit}>
-            <input required
-              className="form-control my-input"
-              id="inputName"
-              data-field-name={'title'}
-              type={'text'}
-              onChange={this.handleChange}
-              placeholder={'Title'}
-              value={title}
-            />
-                                
-            <input required
-              className="form-control my-input"
-              data-field-name={'description'}
-              id="inputPassword"
-              type={'text'}
-              onChange={this.handleChange}
-              placeholder={'Description'}
-              value={description}
-            />  
-                      
-            <div className="msg">
-            {this.props.errorMessage ? <div className="errorM">{this.props.errorMessage}</div>: null }
-            </div>
-            <div className='btns'>  
-                <button type="submit" className="btn btn-add">{isAdd ? `ADD` : `CHANGE`}</button>
-                <button className="btn btn-add" onClick={() => this.props.onClose()}>CANCEL</button>
-            </div>
-          </form></>) : <LoadingScreen isLoad={true}/>}
+            <form className="flex-form" onSubmit={this.handleSubmit}>
+              <input required
+                className="form-control my-input"
+                id="inputName"
+                data-field-name={'title'}
+                type={'text'}
+                onChange={this.handleChange}
+                placeholder={'Title'}
+                value={title}/>
+                                  
+              <input required
+                className="form-control my-input"
+                data-field-name={'description'}
+                id="inputPassword"
+                type={'text'}
+                onChange={this.handleChange}
+                placeholder={'Description'}
+                value={description}
+              />  
+                        
+              <div className="msg">
+              {this.props.errorMessage ? <div className="errorM">{this.props.errorMessage}</div>: null }
+              </div>
+              <div className='btns'>  
+                  <button type="submit" className="btn btn-add">{isAdd ? `ADD` : `CHANGE`}</button>
+                  <button className="btn btn-add" onClick={() => this.props.onClose()}>CANCEL</button>
+              </div>
+            </form></>) : <LoadingScreen isLoad={true}/>}
         </div>
         ) 
       </div>, this.state.root      
@@ -103,7 +106,7 @@ const mapStateToProps = (state) => ({
     todo: (id) => getTodo(id)(state),
     loading: state.task.loading,
     canClose: state.task.canClose,
-    errorMessage: state.app.error
+    errorMessage: getErrors(state)
 });
 
 const mapDispatchTpProps = (dispatch) => ({

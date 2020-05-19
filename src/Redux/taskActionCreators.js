@@ -3,6 +3,7 @@ import { UPLOAD_TODO, ADD_TODO, TURN_OFF_LOADING_TODO, TURN_ON_LOADING_TODO,
 import { getTodos, addTodo, delTodo, editTodo } from '../serverAPI/api';
 import { errorHandler, ErrorCount, throwError } from './appActionCreator'
 
+// загрузить весь список
 export const uploadAct = (todos) => {
     return {
         type: UPLOAD_TODO,
@@ -10,6 +11,7 @@ export const uploadAct = (todos) => {
     }
 } 
 
+// редактировать тудушку
 const change = (id, title, description) => {
     return {
         type: CHANGE_TODO,
@@ -19,6 +21,7 @@ const change = (id, title, description) => {
     }
 }
 
+// добавлять тудушку
 const addAct = (id, title, description, createdBy) => {
     return {
         type: ADD_TODO,
@@ -29,6 +32,7 @@ const addAct = (id, title, description, createdBy) => {
     }
 }
 
+// удалить тудушку
 const delAct = (id) => {
     return {
         type: DEL_TODO,
@@ -36,24 +40,28 @@ const delAct = (id) => {
     }
 }
 
+// остановить loading
 export const offLoad = () => {
     return {
         type: TURN_OFF_LOADING_TODO
     }
 }
 
+// включить loading
 const onLoad = () => {
     return {
         type: TURN_ON_LOADING_TODO
     }
 }
 
+// модальное окно нельзя закрыть
 export const openModal = () => {
     return {
         type: OPEN_MODAL
     }
 }
 
+// модально окно можно закрыть
 const closeModal = () => {
     return {
         type: CLOSE_MODAL
@@ -61,6 +69,8 @@ const closeModal = () => {
 }
 
 const errorEdit = new ErrorCount()
+// если все успешно то меняем в редаксе список, разрешаем закрыть модальное окно
+// аналогично с добавлением
 export const edit = (id, title, description) => {
     return dispatch => {        
         dispatch(onLoad())
@@ -119,6 +129,7 @@ export const upload = () => {
     }
 }
 
+// если все успешно то loading ставим в false, ошибки стираем, обнуляем счетчик обратно
 const success = (dispatch, errorCount) => {    
     dispatch(offLoad());    
     dispatch(throwError(null))

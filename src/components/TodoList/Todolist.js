@@ -10,10 +10,12 @@ import LoadingScreen from '../LoadingScreen/LoadindScreen'
 class TodoList extends React.Component {
 
     state = {
+        // открыто ли модальное окно
         isModalOpen: false,  
         id: null      
     }
 
+    // меняет состояние модального окна, если сюда передается id значит откроется change, если нет add
     toggleModal = (id = null) => {
         this.setState(state => { 
            return {isModalOpen: !state.isModalOpen, id}
