@@ -7,9 +7,6 @@ import ErrorBoundary from './ErrorBoundary';
 
 const store = createStore();
 
-
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -21,3 +18,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+export const { dispatch } = store;

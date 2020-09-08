@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import {login} from '../../Redux/userActionCreators'
 import LoadindScreen from '../LoadingScreen/LoadindScreen'
@@ -6,70 +6,66 @@ import './Login.css'
 import { getErrors } from '../../Redux/selectors'
 
 
-class Login extends React.Component {
-  state = {
-    username: '',
-    password: '',
-  }
+const Login = ({ errorMessage, loading, userLogin }) => {
 
-  handleSubmit = e => {
-    e.preventDefault()
-    const { username, password } = this.state
-    this.props.userLogin(username, password)
-  }
+  const [creden, setCreden] = useState({ username: '',password: '' });
 
-  handleChange = e => {
-    const value = e.currentTarget.value
-    const fieldName = e.currentTarget.dataset.fieldName
+  const handleSubmit = e => {
+    e.preventDefault();
+    const { username, password } = creden;
+    userLogin(username, password);
+  };
 
-    this.setState({
-      [fieldName]: value,
+  const handleChange = e => {
+    const value = e.currentTarget.value;
+    const fieldName = e.currentTarget.dataset.fieldName;
+
+    setCreden({ 
+      ...creden,
+      [fieldName]: value
     })
   }
 
-  
-  render() {    
-
-    if (this.props.loading) { 
-      return <LoadindScreen isLoad={true}/>
-    }
-    const { username, password } = this.state
-  
-    return (
-      <div className="back">
-        <div className='authPage'>
-          <h5 className="card-title text-center">TO DO APP</h5>
-          <form className="flex-form" onSubmit={this.handleSubmit}>
-            <input required
-              className="form-control"
-              id="inputLogin"
-              data-field-name={'username'}
-              type={'text'}
-              onChange={this.handleChange}
-              placeholder={'Login'}
-              value={username}
-            />
-                                
-            <input required
-              className="form-control"
-              data-field-name={'password'}
-              id="inputPassword"
-              type={'password'}
-              onChange={this.handleChange}
-              placeholder={'Password'}
-              value={password}
-            />  
-                     
-            <div className="msg">
-              {this.props.errorMessage ? <div style={{color:"red"}}>{this.props.errorMessage}</div> : null }
-            </div>
-            <hr className="my-4"></hr>
-            <button type="submit" className="btn btn-lg btn-primary btn-block text-uppercase">Log in</button>
-          </form>
-        </div>
-      </div>      
-    )
+  if (loading) { 
+    return <LoadindScreen isLoad={true}/>
   }
+  
+  const { username, password } = creden;
+
+  return (    
+    <div className="back">
+      <div className='authPage'>
+        <h5 className="card-title text-center">TO DO APP</h5>
+        <form className="flex-form" onSubmit={handleSubmit}>
+          <input required
+            className="form-control"
+            id="inputLogin"
+            data-field-name={'username'}
+            type={'text'}
+            onChange={handleChange}
+            placeholder={'Login'}
+            value={username}
+          />
+                              
+          <input required
+            className="form-control"
+            data-field-name={'password'}
+            id="inputPassword"
+            type={'password'}
+            onChange={handleChange}
+            placeholder={'Password'}
+            value={password}
+          />  
+                    
+          <div className="msg">
+            {errorMessage ? <div style={{color:"red"}}>{errorMessage}</div> : null }
+          </div>
+          <hr className="my-4"></hr>
+          <button type="submit" className="btn btn-lg btn-primary btn-block text-uppercase">Log in</button>
+        </form>
+      </div>
+    </div>    
+  )
 }
 
 

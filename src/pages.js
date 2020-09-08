@@ -5,19 +5,25 @@ import { connect } from 'react-redux'
 import Users from './components/Users/Users'
 import LoadindScreen from './components/LoadingScreen/LoadindScreen';
 import PrivateRoute from './components/PrivateRoute';
+import Menu from './components/Menu/Menu'
+
 
 const Pages = ({ loading}) => {
+    
     return (
-    <div className='pages'>        
-        <LoadindScreen isLoad={loading}/>        
+    <>    
+    <Menu />   
+    <div className='pages'>      
+        <LoadindScreen isLoad={loading}/>      
         <Switch>           
             <Route exact path="/"><h1>This is homepage</h1></Route>
             <Route path="/todos" component={Todolist} /> 
             <PrivateRoute path="/users" component={Users} />   
-            <Route path="/logout"  />             
+            <Route path="/logout" />             
             <Redirect to="/"/>
         </Switch>
     </div>    
+    </>
     )
 }
 

@@ -11,9 +11,8 @@ const style = {color: "#CC22E2"};
 
 const Menu = ({auth, name, role, Logout}) => {    
     return (
-        auth ? 
-        (<nav className="menu">
-            {auth ? (<h1>Welcome, {name}!</h1>) : null}
+        <nav className="menu">
+            <h1>Welcome, {name}!</h1>
             <NavLink className='navlink' activeStyle={style} to='/todos'>To do list</NavLink>
 
             {role === 'admin' ? (
@@ -27,7 +26,7 @@ const Menu = ({auth, name, role, Logout}) => {
             {!auth ? (
                 <NavLink className='navlink' activeStyle={style} to='/login'>Login</NavLink>
             ) : null}
-        </nav>) : null    
+        </nav>    
     );
 }
 
