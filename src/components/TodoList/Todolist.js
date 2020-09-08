@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import TodoItem from '../Todo-item/Todo-item'
 import { deleteTask, upload } from '../../Redux/taskActionCreators'
 import { connect } from 'react-redux'
@@ -7,52 +7,44 @@ import Modal from '../Modal/Modal'
 import './Todolist.css'
 import LoadingScreen from '../LoadingScreen/LoadindScreen'
 
-class TodoList extends React.Component {
+const TodoList = ({ getAll, delTask, todos, loading }) => {
 
-    state = {
-        // открыто ли модальное окно
-        isModalOpen: false,  
-        id: null      
-    }
+    const [modal, setModal] = useState({isModalOpen: false, id: null})
 
     // меняет состояние модального окна, если сюда передается id значит откроется change, если нет add
-    toggleModal = (id = null) => {
-        this.setState(state => { 
-           return {isModalOpen: !state.isModalOpen, id}
-        })
-    }
+    const toggleModal = (id = null) => {
+        setModal({isModalOpen: !modal.isModalOpen, id})
+        }
 
-    componentDidMount = () => (this.props.getAll())
+    useEffect(() => {getAll()}, [getAll])
 
-    render() {
-        return(
-        <div className='Main'>
-            <div className="fAdd">
-                <div>Add</div> 
-                <button type="button" className="btn btnPlus btn-color mx-2" onClick={() => this.toggleModal()}>
-                    <i className="fa fa-plus"></i>
-                </button>
-            </div>
-            
-            {this.state.isModalOpen && (
-                <Modal onClose={this.toggleModal} isAdd={this.state.id === null} id={this.state.id}/>
-            )}
+    return (
+    <div className='Main'>
+        <div className="fAdd">
+            <div>Add</div> 
+            <button type="button" className="btn btnPlus btn-color mx-2" onClick={() => toggleModal()}>
+                <i className="fa fa-plus"></i>
+            </button>
+        </div>
+        
+        {modal.isModalOpen && (
+            <Modal onClose={toggleModal} isAdd={modal.id === null} id={modal.id}/>
+        )}
 
-            <div className="wMain"> 
-                <h3>Todos</h3>
-                { (this.props.loading && !this.state.isModalOpen) ? <LoadingScreen isLoad={true} /> :
-                (<ul className="todo-list list-group">
-                    {this.props.todos.map((todo) => {
-                        return (<li key={todo.id} className="list-group-item">              
-                        <TodoItem todo={todo}  onChange={() => (this.toggleModal(todo.id))}
-                                                delTask={() => (this.props.delTask(todo.id))}/>
-                        </li>
-                        )})}
-                </ul>) }   
-            </div>      
-        </div>        
-        )
-    }
+        <div className="wMain"> 
+            <h3>Todos</h3>
+            { (loading && !modal.isModalOpen) ? <LoadingScreen isLoad={true} /> :
+            (<ul className="todo-list list-group">
+                {todos.map((todo) => {
+                    return (<li key={todo.id} className="list-group-item">              
+                    <TodoItem todo={todo}  onChange={() => (toggleModal(todo.id))}
+                                            delTask={() => (delTask(todo.id))}/>
+                    </li>
+                    )})}
+            </ul>) }   
+        </div>      
+    </div>          
+    )
 }
  
 function mapStateToProps(state) {

@@ -1,86 +1,21 @@
 import { UPLOAD_TODO, ADD_TODO, TURN_OFF_LOADING_TODO, TURN_ON_LOADING_TODO, 
-            DEL_TODO, CHANGE_TODO, OPEN_MODAL, CLOSE_MODAL } from './constants'
-import { getTodos, addTodo, delTodo, editTodo } from '../serverAPI/api';
-import { errorHandler, ErrorCount, throwError } from './appActionCreator'
-
-// загрузить весь список
-export const uploadAct = (todos) => {
-    return {
-        type: UPLOAD_TODO,
-        array: todos
-    }
-} 
-
-// редактировать тудушку
-const change = (id, title, description) => {
-    return {
-        type: CHANGE_TODO,
-        id,
-        title,
-        description
-    }
-}
-
-// добавлять тудушку
-const addAct = (id, title, description, createdBy) => {
-    return {
-        type: ADD_TODO,
-        id,
-        title,
-        createdBy,
-        description
-    }
-}
-
-// удалить тудушку
-const delAct = (id) => {
-    return {
-        type: DEL_TODO,
-        id
-    }
-}
-
-// остановить loading
-export const offLoad = () => {
-    return {
-        type: TURN_OFF_LOADING_TODO
-    }
-}
-
-// включить loading
-const onLoad = () => {
-    return {
-        type: TURN_ON_LOADING_TODO
-    }
-}
-
-// модальное окно нельзя закрыть
-export const openModal = () => {
-    return {
-        type: OPEN_MODAL
-    }
-}
-
-// модально окно можно закрыть
-const closeModal = () => {
-    return {
-        type: CLOSE_MODAL
-    }
-}
+            DEL_TODO, CHANGE_TODO, CLOSE_MODAL } from './taskSlice'
+import { getTodos, addTodo, delTodo, editTodo } from '../serverAPI/api'
+import { errorHandler, ErrorCount, ERROR } from './appSlice'
 
 const errorEdit = new ErrorCount()
 // если все успешно то меняем в редаксе список, разрешаем закрыть модальное окно
 // аналогично с добавлением
 export const edit = (id, title, description) => {
     return dispatch => {        
-        dispatch(onLoad())
+        dispatch(TURN_ON_LOADING_TODO())
         editTodo(id, {title, description}) 
         .then(() => {             
-           dispatch(change(id, title, description))
-           dispatch(closeModal())
+           dispatch(CHANGE_TODO({id, title, description}))
+           dispatch(CLOSE_MODAL())
            success(dispatch, errorEdit)
         })  
-        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(edit(id, title, description)), count:errorEdit}));
+        .catch(err => { dispatch(errorHandler(err, { hider:TURN_OFF_LOADING_TODO, method: ()=> dispatch(edit(id, title, description)), count:errorEdit}));
         })
     }
 }
@@ -88,15 +23,15 @@ export const edit = (id, title, description) => {
 const errorAdd = new ErrorCount()
 export const add = (title, description) => {
     return dispatch => {     
-        dispatch(onLoad())   
+        dispatch(TURN_ON_LOADING_TODO())   
         addTodo({title, description})      
         .then((response) => {
            const { id, title, description, createdBy } = response.data
-           dispatch(addAct(id, title, description, createdBy))
-           dispatch(closeModal())
+           dispatch(ADD_TODO({id, title, description, createdBy}))
+           dispatch(CLOSE_MODAL())
            success(dispatch, errorAdd)
         })  
-        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(add(title, description)), count:errorAdd}));
+        .catch(err => { dispatch(errorHandler(err, { hider:TURN_OFF_LOADING_TODO, method: ()=> dispatch(add(title, description)), count:errorAdd}));
         })
     }
 }
@@ -104,13 +39,13 @@ export const add = (title, description) => {
 const errorDelete = new ErrorCount()
 export const deleteTask = (id) => {
     return dispatch => {
-        dispatch(onLoad())
+        dispatch(TURN_ON_LOADING_TODO())
         delTodo(id)
         .then(() => { 
-            dispatch(delAct(id))
+            dispatch(DEL_TODO(id))
             success(dispatch, errorDelete)
         })
-        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(deleteTask(id)), count:errorDelete}));
+        .catch(err => { dispatch(errorHandler(err, { hider:TURN_OFF_LOADING_TODO, method: ()=> dispatch(deleteTask(id)), count:errorDelete}));
         })
     }
 }
@@ -118,20 +53,20 @@ export const deleteTask = (id) => {
 const errorUpload = new ErrorCount()
 export const upload = () => {
     return dispatch => {        
-        dispatch(onLoad())
+        dispatch(TURN_ON_LOADING_TODO())
         getTodos()        
-        .then((response) => {
-           dispatch(uploadAct(response.data))
+        .then((response) => { 
+           dispatch(UPLOAD_TODO(response.data))
            success(dispatch, errorUpload)
         })  
-        .catch(err => { dispatch(errorHandler(err, { hider:offLoad, method: ()=> dispatch(upload()), count:errorUpload}));
+        .catch(err => { dispatch(errorHandler(err, { hider:TURN_OFF_LOADING_TODO, method: ()=> dispatch(upload()), count:errorUpload}));
         })
     }
 }
 
 // если все успешно то loading ставим в false, ошибки стираем, обнуляем счетчик обратно
 const success = (dispatch, errorCount) => {    
-    dispatch(offLoad());    
-    dispatch(throwError(null))
+    dispatch(TURN_OFF_LOADING_TODO());    
+    dispatch(ERROR(null))
     errorCount.reset();
 }

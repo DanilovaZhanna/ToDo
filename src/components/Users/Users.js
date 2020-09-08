@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import { connect } from 'react-redux'
-import { loadUsers, offLoad } from '../../Redux/userActionCreators' 
+import { loadUsers } from '../../Redux/userActionCreators' 
+import { TURN_OFF_LOADING_USER } from '../../Redux/userSlice'
 
 const Users = ({users, loading, getUsers, offLoad}) => {
     
@@ -30,7 +31,7 @@ function mapStateToProps(state) {
 function mapDispatchTpProps(dispatch) {
     return ({
         getUsers: () => dispatch(loadUsers()),
-        offLoad: () => dispatch(offLoad())
+        offLoad: () => dispatch(TURN_OFF_LOADING_USER())
     })
 } 
 

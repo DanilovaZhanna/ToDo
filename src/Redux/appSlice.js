@@ -1,12 +1,20 @@
-import { ERROR } from './constants';
-import { logoutSet } from './userActionCreators'
+import { createSlice } from '@reduxjs/toolkit'
 
-export const throwError = (error) => {
-    return {
-        type:ERROR,
-        error
+const appSlice = createSlice({
+    name: 'app',
+    initialState: {
+        error: null
+    },
+    reducers: {
+        ERROR: (state, action) => {
+            state.error = action.payload;
+        }
     }
-}
+})
+  
+const {actions, reducer} = appSlice;
+export const { ERROR } = actions;
+export default reducer;
 
 // пыталась сделать обработчик ошибок, в catch каждой санки идет dispatch функции обработчика ошибок:
 // .catch(err => { dispatch(errorHandler(err, { hider:offLoad, 
@@ -21,16 +29,15 @@ export function errorHandler(err, data) {
             // записываем ошибку 
             case 400:                
                 dispatch(hider()); 
-                dispatch(throwError(err.response.data.message));
+                dispatch(ERROR(err.response.data.message));
                 count.reset();
                 break;
             // если 401 просто кидаем на логин 
-            case 401: 
-                dispatch(logoutSet());
-                dispatch(hider());                 
-                count.reset();
-                return;
-            // что делать с недостаточно прав
+            // case 401: 
+            //     dispatch(LOGOUT());
+            //     dispatch(hider());                 
+            //     count.reset();
+            //     return;
             case 403: 
                 dispatch(hider());  
                 count.reset();
@@ -43,9 +50,9 @@ export function errorHandler(err, data) {
                     count.dec()
                     data.method();
                 } else 
-                    dispatch(throwError('500'));
+                    dispatch(ERROR('500'));
                 return; 
-            default: alert("Непредвиденная ошибка")
+            default: ;
         }            
     }
 }
